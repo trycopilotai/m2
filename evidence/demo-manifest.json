@@ -1,0 +1,59 @@
+{
+  "schema_version": 1,
+  "date": "2026-10-04",
+  "skill": {
+    "path": "skills/m2/SKILL.md",
+    "sha256": "3da8c8ded660bbb5570281f677c1727f70ffd73d58ad7e9a192c60053ff5e924"
+  },
+  "interface": {
+    "path": "skills/m2/agents/openai.yaml",
+    "sha256": "79ee06489413ceed84a6796142fbc17711efaccb8e14412d88a62f1f7c43f51f"
+  },
+  "documents": [
+    {
+      "path": "skills/m2/references/m1.protocol.md",
+      "sha256": "418f92292af22f0291f7bce7af6d7cd84c1084c47f43fa960ee0a0d6096216b3"
+    },
+    {
+      "path": "skills/m2/references/m2-artifact-schemas.md",
+      "sha256": "15a90d98f8d4ad7da29b78755a3a7186a4307b4d9cb38334a0e78b601fd5a734"
+    },
+    {
+      "path": "skills/m2/references/m2.protocol.md",
+      "sha256": "34bdee84378cf9ec7360f2725841d443462caad08d672b27769f2a97eb239338"
+    },
+    {
+      "path": "skills/m2/references/writeAC.protocol.md",
+      "sha256": "1cd89a07f2f2bdb1ddff3df266767cacba74e618d51e8333980ef8b3f55974a4"
+    }
+  ],
+  "programs": [
+    {
+      "path": "tests/test_package.py",
+      "sha256": "7e6d542cce5b7fbda8934724fa50b7eeffcbe81c7316084c53bd0dbd4f7cbd24"
+    }
+  ],
+  "agent": {
+    "invoked_the_skill": false,
+    "note": "No agent session ran m2 to produce this evidence, and no part of the m2 protocol was executed. The transcript is the output of the packaging test, run from a shell while this release was being prepared."
+  },
+  "invocation": {
+    "commands": [
+      "python3 tests/test_package.py -v"
+    ],
+    "interpreter": "Python 3.13.13",
+    "working_directory": "a throwaway directory holding a copy of skills/ and of tests/test_package.py"
+  },
+  "output": {
+    "path": "evidence/transcripts/package-check.txt",
+    "sha256": "aff960ad187de4cd91d30e60bdbcf36ae887deb9923f8152106d3bb430fdf547",
+    "edited": true,
+    "transforms": [
+      {
+        "name": "strip-test-duration",
+        "what": "The elapsed time that unittest prints after the test count was removed from the one line that reports it, so that line ends after the test count. scripts/record_session.py makes that edit. Nothing else was changed."
+      }
+    ],
+    "note": "scripts/record_session.py wrote the command line and, from the command's exit status, the exit status line; everything between is the packaging test's output."
+  }
+}

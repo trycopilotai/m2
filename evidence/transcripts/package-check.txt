@@ -1,0 +1,18 @@
+$ python3 tests/test_package.py -v
+test_1_files (__main__.PackageTest.test_1_files)
+The package is SKILL.md, agents/openai.yaml and four documents. ... ok
+test_2_documents (__main__.PackageTest.test_2_documents)
+Each of the four documents opens with its protocol heading. ... ok
+test_3_no_program (__main__.PackageTest.test_3_no_program)
+No package file is executable, has a #! line, or is not .md/.yaml. ... ok
+test_4_pointers (__main__.PackageTest.test_4_pointers)
+Every references/ path the package names is a file in it. ... ok
+test_5_skill_points_at_each_document (__main__.PackageTest.test_5_skill_points_at_each_document)
+SKILL.md names each of the four documents. ... ok
+
+----------------------------------------------------------------------
+Ran 5 tests
+
+OK
+$ echo "exit status: $?"
+exit status: 0

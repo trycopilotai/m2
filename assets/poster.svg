@@ -1,0 +1,37 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1280" height="720" viewBox="0 0 1280 720" role="img" aria-labelledby="title description">
+  <title id="title">Output of the m2 packaging test</title>
+  <desc id="description">A terminal runs the packaging test for the m2 skill package. 5 tests report ok, and the command exits with status 0. No part of the m2 protocol is run.</desc>
+  <rect width="1280" height="720" rx="24" fill="#101418" />
+  <circle cx="40" cy="44" r="9" fill="#ff6b6b" />
+  <circle cx="70" cy="44" r="9" fill="#ffd166" />
+  <circle cx="100" cy="44" r="9" fill="#55d6be" />
+  <g font-family="ui-monospace, SFMono-Regular, Menlo, monospace" font-size="16">
+    <text x="40" y="108" fill="#f7fbff" xml:space="preserve">$ python3 tests/test_package.py -v</text>
+    <g class="step-1">
+      <text x="40" y="148" fill="#a7bac5" xml:space="preserve">test_1_files (__main__.PackageTest.test_1_files)</text>
+      <text x="40" y="174" fill="#55d6be" xml:space="preserve">The package is SKILL.md, agents/openai.yaml and four documents. ... ok</text>
+    </g>
+    <g class="step-2">
+      <text x="40" y="214" fill="#a7bac5" xml:space="preserve">test_2_documents (__main__.PackageTest.test_2_documents)</text>
+      <text x="40" y="240" fill="#55d6be" xml:space="preserve">Each of the four documents opens with its protocol heading. ... ok</text>
+    </g>
+    <g class="step-3">
+      <text x="40" y="280" fill="#a7bac5" xml:space="preserve">test_3_no_program (__main__.PackageTest.test_3_no_program)</text>
+      <text x="40" y="306" fill="#55d6be" xml:space="preserve">No package file is executable, has a #! line, or is not .md/.yaml. ... ok</text>
+    </g>
+    <g class="step-4">
+      <text x="40" y="346" fill="#a7bac5" xml:space="preserve">test_4_pointers (__main__.PackageTest.test_4_pointers)</text>
+      <text x="40" y="372" fill="#55d6be" xml:space="preserve">Every references/ path the package names is a file in it. ... ok</text>
+    </g>
+    <g class="step-5">
+      <text x="40" y="412" fill="#a7bac5" xml:space="preserve">test_5_skill_points_at_each_document (__main__.PackageTest.test_5_skill_points_at_each_document)</text>
+      <text x="40" y="438" fill="#55d6be" xml:space="preserve">SKILL.md names each of the four documents. ... ok</text>
+    </g>
+    <g class="step-6">
+      <text x="40" y="478" fill="#f7fbff" xml:space="preserve">Ran 5 tests</text>
+      <text x="40" y="504" fill="#55d6be" xml:space="preserve">OK</text>
+      <text x="40" y="530" fill="#55d6be" xml:space="preserve">exit status: 0</text>
+    </g>
+  </g>
+  <text x="40" y="692" fill="#a7bac5" font-family="ui-monospace, SFMono-Regular, Menlo, monospace" font-size="15">Packaging test output, from evidence/transcripts/package-check.txt</text>
+</svg>
