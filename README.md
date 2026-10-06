@@ -214,7 +214,7 @@ fails.
 
 ```sh
 set -eu
-release=v0.1.1
+release=v0.1.2
 install_target="$HOME/.claude/skills/m2"
 install_parent="$(dirname "$install_target")"
 mkdir -p "$install_parent"
@@ -254,7 +254,7 @@ the block above is `install_target`.
 
 ```sh
 set -eu
-release=v0.1.1
+release=v0.1.2
 install_target="$HOME/.agents/skills/m2"
 install_parent="$(dirname "$install_target")"
 mkdir -p "$install_parent"
@@ -331,7 +331,9 @@ the demo images to each other.
 ### Agent invocations
 
 Each client was started once, on one synthetic fixture
-holding only a made-up three-workstream `GOAL.md`, and asked
+whose only tracked file is a made-up three-workstream
+`GOAL.md` (for Codex, beside a committed copy of the skill
+under `.agents/skills/m2`), and asked
 through the skill which m2 artifacts a manager would produce
 for that goal and where the protocol defines each. This is
 an agent reading and citing the protocol, not an m2 run, and
@@ -341,7 +343,11 @@ not a benchmark.
   Claude Code 2.1.220 loaded `m2:m2` with a `Skill` call,
   read the goal and the four documents, and answered with a
   table of manager artifacts citing file, section and line.
-  It started no m2 run and changed no file.
+  It started no m2 run and changed no file. One row is
+  wrong: it says Phase 2 rejects the board when any packet
+  lacks a file lease, while the cited rule rejects it only
+  when two edit-capable packets can touch the same file
+  without a lease order.
 - [`evidence/transcripts/2026-10-06-codex-invocation.txt`](evidence/transcripts/2026-10-06-codex-invocation.txt):
   Codex 0.146.0 read `SKILL.md` and the four documents and
   answered with the manager, packet, lease, contract, review,
@@ -349,13 +355,18 @@ not a benchmark.
   section and line. It started no m2 run and changed no
   file.
 
-Not every citation was checked against the documents. Both
-transcripts were rendered from the clients' raw output by
+Both runs used the package as tagged v0.1.0; nothing under
+`skills/` changed since. Not every citation was checked
+against the documents. Both transcripts were rendered from
+the clients' raw output by
 [`scripts/render_invocation.py`](scripts/render_invocation.py),
-which replaces local paths and the host name and makes no
-other edit; `evidence/demo-manifest.json` lists the
-replacements under `invocations`, with the client versions,
-models and hashes.
+which makes two kinds of edit and no other: it cuts tool-call
+arguments longer than 300 characters, marking each cut with
+` ...[+N chars]`, and it replaces local paths and the host
+name. `evidence/demo-manifest.json` declares each edit under
+`invocations`, with the client versions, models and hashes.
+The raw output and the fixture are not published, so the
+transcripts cannot be re-rendered from this repository.
 
 ## Contributing
 

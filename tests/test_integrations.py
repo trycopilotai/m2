@@ -337,6 +337,7 @@ class EvidenceTest(unittest.TestCase):
 
 
 TRANSFORMS = [
+    "truncate-tool-arguments",
     "replace-plugin-root",
     "replace-capture-root",
     "replace-scratch-root",
@@ -374,6 +375,16 @@ class InvocationTest(unittest.TestCase):
         }
         present = {path.name for path in TRANSCRIPT.parent.iterdir()}
         self.assertEqual(present, named)
+
+    def test_cut_markers_appear_only_in_tool_calls(self) -> None:
+        for entry in self.invocations():
+            text = read(ROOT / entry["transcript"]["path"])
+            head, _, final = text.partition("\n== final message\n")
+            calls = head.split("\n== tool calls\n", 1)[1]
+            self.assertNotIn(" ...[+", head.split("\n== tool calls\n", 1)[0])
+            for line in calls.splitlines():
+                if " ...[+" in line:
+                    self.assertRegex(line, r"^\[\d+\] .* \.\.\.\[\+\d+ chars\]$")
 
     def test_transcripts_show_the_skill_being_loaded(self) -> None:
         claude, codex = (ROOT / e["transcript"]["path"] for e in self.invocations())

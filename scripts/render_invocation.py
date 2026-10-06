@@ -7,8 +7,17 @@ writes the prompt, every tool call with its arguments, each
 call's status where the raw output records one, and the
 final message verbatim.
 
-The only edits are path and name replacements, applied in
-this order to the whole rendered text:
+Two kinds of edit are made, and no other.
+
+truncate-tool-arguments: while the text is built, each tool
+call's arguments (the JSON of its input, or a Codex command
+line) longer than 300 characters are cut to their first 300
+characters, followed by ` ...[+N chars]`, where N is the
+number of characters cut. Prompts, statuses and the final
+message are never cut.
+
+Then path and name replacements are applied, in this order,
+to the whole rendered text:
 
 1. replace-plugin-root: the directory the client loaded the
    skill from becomes `/plugin`.

@@ -63,7 +63,7 @@
       "model": "claude-sonnet-5",
       "model_source": "the init event of the stream-json output",
       "invocation": "Use /m2 for this task. (prompt text; the agent loaded the skill with a Skill tool call for m2:m2)",
-      "fixture": "A synthetic git repository whose only tracked file is GOAL.md, a made-up three-workstream goal (backend CSV export endpoint, frontend download button, user-guide docs), with a local bare repository as origin. The skill was loaded with --plugin-dir from a clone of this repository at v0.1.0.",
+      "fixture": "A synthetic git repository holding GOAL.md, a made-up three-workstream goal (backend CSV export endpoint, frontend download button, user-guide docs), with a local bare repository as origin. GOAL.md was its only tracked file. The skill was loaded with --plugin-dir from a clone of this repository at v0.1.0.",
       "date": "2026-10-06",
       "transcript": {
         "path": "evidence/transcripts/2026-10-06-claude-code-invocation.txt",
@@ -72,6 +72,10 @@
       "raw_output_sha256": "be7d188e5bd6a0009bdc3a21915a85b44fdf61721f79b41fbf0cd9c69f84fc99",
       "renderer": "scripts/render_invocation.py",
       "transforms": [
+        {
+          "name": "truncate-tool-arguments",
+          "what": "Each tool call's arguments longer than 300 characters were cut to their first 300 characters, followed by ' ...[+N chars]' giving the number cut. The prompt, statuses and the final message were not cut. Applied before the replacements."
+        },
         {
           "name": "replace-plugin-root",
           "what": "The absolute path of the directory the client loaded the skill from (the --plugin-dir clone for Claude Code, the fixture's .agents/skills/m2 for Codex) became /plugin. Applied first."
@@ -94,7 +98,7 @@
         }
       ],
       "invoked_the_skill": true,
-      "outcome": "An agent run: the agent loaded m2:m2, read GOAL.md and the four reference documents, and answered with a table of manager artifacts citing file, section and line; it started no m2 run and changed no file."
+      "outcome": "An agent run: the agent loaded m2:m2, read GOAL.md and the four reference documents, and answered with a table of manager artifacts citing file, section and line; it started no m2 run and changed no file. Checked after the run, its File Lease row misstates the cited Phase 2 rule, which rejects the board only when two edit-capable packets can touch the same file without a lease order."
     },
     {
       "product": "Codex",
@@ -102,7 +106,7 @@
       "model": "gpt-5.6-sol",
       "model_source": "Codex's own session log for the thread; the exec --json output does not name the model",
       "invocation": "Use $m2 for this task.",
-      "fixture": "A synthetic git repository whose only tracked file is GOAL.md, a made-up three-workstream goal (backend CSV export endpoint, frontend download button, user-guide docs), with a local bare repository as origin. skills/m2 of this repository at v0.1.0 was copied into the fixture's .agents/skills/m2 and committed there.",
+      "fixture": "A synthetic git repository holding GOAL.md, a made-up three-workstream goal (backend CSV export endpoint, frontend download button, user-guide docs), with a local bare repository as origin. A second commit added a copy of skills/m2 of this repository at v0.1.0 under .agents/skills/m2; GOAL.md and that copy were its only tracked files.",
       "date": "2026-10-06",
       "transcript": {
         "path": "evidence/transcripts/2026-10-06-codex-invocation.txt",
@@ -111,6 +115,10 @@
       "raw_output_sha256": "b341eb8f6f0b727d374f722b06b4a528fad6d7eb7827a11a7e361244c4f7c4bd",
       "renderer": "scripts/render_invocation.py",
       "transforms": [
+        {
+          "name": "truncate-tool-arguments",
+          "what": "Each tool call's arguments longer than 300 characters were cut to their first 300 characters, followed by ' ...[+N chars]' giving the number cut. The prompt, statuses and the final message were not cut. Applied before the replacements."
+        },
         {
           "name": "replace-plugin-root",
           "what": "The absolute path of the directory the client loaded the skill from (the --plugin-dir clone for Claude Code, the fixture's .agents/skills/m2 for Codex) became /plugin. Applied first."
