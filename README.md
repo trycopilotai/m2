@@ -37,8 +37,9 @@ the recorded output of
   they work in another one after the placeholders are filled
   in has not been tested.
 - Nothing here checks a record against the artifact schemas.
-- Neither Claude Code nor Codex was started to confirm that
-  the invocation names below resolve.
+- Neither install block below was run in a Claude Code or
+  Codex session. The agent runs loaded the skill from a
+  plugin directory and from a copy in the fixture.
 
 ## What the claim covers
 
@@ -50,8 +51,9 @@ with a `#!` line, or has another suffix. The documents do
 quote shell commands and a pseudocode loop as text.
 
 The repository around the package also holds Python scripts
-that record the transcript, build and check the images, and
-test the packaging. They are not part of the skill.
+that record the transcript, render the agent invocation
+transcripts, build and check the images, and test the
+packaging. They are not part of the skill.
 
 ## What is in it
 
@@ -212,7 +214,7 @@ fails.
 
 ```sh
 set -eu
-release=v0.1.0
+release=v0.1.1
 install_target="$HOME/.claude/skills/m2"
 install_parent="$(dirname "$install_target")"
 mkdir -p "$install_parent"
@@ -240,8 +242,10 @@ trap - EXIT
 rm -rf "$install_tmp"
 ```
 
-The name to invoke is `/m2`. As stated above, that was not
-confirmed in a running Claude Code.
+The name to invoke is `/m2`. In the agent run below,
+Claude Code loaded the skill from a plugin directory, where
+it is listed as `m2:m2`; a skill installed by this block was
+not invoked.
 
 ### Codex
 
@@ -250,7 +254,7 @@ the block above is `install_target`.
 
 ```sh
 set -eu
-release=v0.1.0
+release=v0.1.1
 install_target="$HOME/.agents/skills/m2"
 install_parent="$(dirname "$install_target")"
 mkdir -p "$install_parent"
@@ -278,8 +282,10 @@ trap - EXIT
 rm -rf "$install_tmp"
 ```
 
-The name to invoke is `$m2`. That was not confirmed in a
-running Codex either.
+The name to invoke is `$m2`. In the agent run below, Codex
+picked up `$m2` from a copy of the package in the fixture's
+`.agents/skills/m2`; a skill installed by this block was not
+invoked.
 
 Each block works in a temporary `.m2.*` directory beside the
 target and removes it on exit. An existing install at the
@@ -319,8 +325,37 @@ This is evidence about the files in the package. It is not
 evidence that the protocol works.
 
 `make check` runs the packaging test and a second suite that
-ties this file, both plugin manifests, the transcript and
+ties this file, both plugin manifests, the transcripts and
 the demo images to each other.
+
+### Agent invocations
+
+Each client was started once, on one synthetic fixture
+holding only a made-up three-workstream `GOAL.md`, and asked
+through the skill which m2 artifacts a manager would produce
+for that goal and where the protocol defines each. This is
+an agent reading and citing the protocol, not an m2 run, and
+not a benchmark.
+
+- [`evidence/transcripts/2026-10-06-claude-code-invocation.txt`](evidence/transcripts/2026-10-06-claude-code-invocation.txt):
+  Claude Code 2.1.220 loaded `m2:m2` with a `Skill` call,
+  read the goal and the four documents, and answered with a
+  table of manager artifacts citing file, section and line.
+  It started no m2 run and changed no file.
+- [`evidence/transcripts/2026-10-06-codex-invocation.txt`](evidence/transcripts/2026-10-06-codex-invocation.txt):
+  Codex 0.146.0 read `SKILL.md` and the four documents and
+  answered with the manager, packet, lease, contract, review,
+  evidence, delivery and conductor artifacts, citing file,
+  section and line. It started no m2 run and changed no
+  file.
+
+Not every citation was checked against the documents. Both
+transcripts were rendered from the clients' raw output by
+[`scripts/render_invocation.py`](scripts/render_invocation.py),
+which replaces local paths and the host name and makes no
+other edit; `evidence/demo-manifest.json` lists the
+replacements under `invocations`, with the client versions,
+models and hashes.
 
 ## Contributing
 

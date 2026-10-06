@@ -336,6 +336,126 @@ class EvidenceTest(unittest.TestCase):
         self.assertEqual(count, ["Ran %d tests" % len(recorded)])
 
 
+TRANSFORMS = [
+    "replace-plugin-root",
+    "replace-capture-root",
+    "replace-scratch-root",
+    "replace-home",
+    "replace-hostname",
+]
+
+
+class InvocationTest(unittest.TestCase):
+    def invocations(self) -> list:
+        return json.loads(read(MANIFEST))["invocations"]
+
+    def test_one_published_invocation_per_client(self) -> None:
+        products = [entry["product"] for entry in self.invocations()]
+        self.assertEqual(products, ["Claude Code", "Codex"])
+        for entry in self.invocations():
+            self.assertIs(entry["invoked_the_skill"], True)
+            self.assertRegex(entry["raw_output_sha256"], r"^[0-9a-f]{64}$")
+            self.assertEqual(entry["renderer"], "scripts/render_invocation.py")
+            self.assertEqual([t["name"] for t in entry["transforms"]], TRANSFORMS)
+            for field in ("version", "model", "invocation", "fixture", "date", "outcome"):
+                self.assertTrue(entry[field], field)
+
+    def test_transcript_hashes_match_the_manifest(self) -> None:
+        for entry in self.invocations():
+            path = ROOT / entry["transcript"]["path"]
+            self.assertEqual(entry["transcript"]["sha256"], sha256(path))
+            client = "claude-code" if entry["product"] == "Claude Code" else "codex"
+            self.assertEqual(path.name, entry["date"] + "-" + client + "-invocation.txt")
+            self.assertTrue(read(path).startswith("client: " + client + "\n"))
+
+    def test_transcript_set_is_what_the_manifest_names(self) -> None:
+        named = {TRANSCRIPT.name} | {
+            Path(entry["transcript"]["path"]).name for entry in self.invocations()
+        }
+        present = {path.name for path in TRANSCRIPT.parent.iterdir()}
+        self.assertEqual(present, named)
+
+    def test_transcripts_show_the_skill_being_loaded(self) -> None:
+        claude, codex = (ROOT / e["transcript"]["path"] for e in self.invocations())
+        self.assertIn('[1] Skill {"skill": "m2:m2"}', read(claude))
+        self.assertIn(".agents/skills/m2/SKILL.md", read(codex))
+
+    def test_transcripts_hold_no_local_paths(self) -> None:
+        for entry in self.invocations():
+            text = read(ROOT / entry["transcript"]["path"])
+            self.assertIsNone(re.search(r"/(Users|home|private|tmp)/", text))
+            self.assertNotIn("/tmp/claude-", text)
+
+    def test_readme_links_both_transcripts(self) -> None:
+        text = read(README)
+        self.assertIn("### Agent invocations", text)
+        for entry in self.invocations():
+            self.assertIn("(" + entry["transcript"]["path"] + ")", text)
+
+
+class RendererTest(unittest.TestCase):
+    def renderer(self):
+        return load(ROOT / "scripts" / "render_invocation.py", "render_invocation")
+
+    def test_claude_code_stream_is_rendered(self) -> None:
+        raw = "\n".join(
+            json.dumps(record)
+            for record in (
+                {"type": "system", "subtype": "init", "model": "m"},
+                {
+                    "type": "assistant",
+                    "message": {
+                        "content": [
+                            {"type": "tool_use", "id": "a", "name": "Read", "input": {"file_path": "/f/x"}},
+                            {"type": "tool_use", "id": "b", "name": "Bash", "input": {"command": "x" * 400}},
+                        ]
+                    },
+                },
+                {
+                    "type": "user",
+                    "message": {
+                        "content": [
+                            {"type": "tool_result", "tool_use_id": "a"},
+                            {"type": "tool_result", "tool_use_id": "b", "is_error": True},
+                        ]
+                    },
+                },
+                {"type": "result", "result": "done\n  verbatim"},
+            )
+        )
+        text = self.renderer().render("claude-code", raw, "go\n")
+        self.assertIn('[1] Read {"file_path": "/f/x"}\n    status: ok\n', text)
+        self.assertIn("    status: error\n", text)
+        self.assertIn(" ...[+", text)
+        self.assertTrue(text.endswith("== final message\ndone\n  verbatim\n"))
+
+    def test_codex_stream_is_rendered(self) -> None:
+        raw = "\n".join(
+            json.dumps(record)
+            for record in (
+                {"type": "item.completed", "item": {"id": "1", "type": "reasoning", "text": "r"}},
+                {"type": "item.completed", "item": {"id": "2", "type": "command_execution", "command": "ls", "exit_code": 2}},
+                {"type": "item.completed", "item": {"id": "3", "type": "agent_message", "text": "first"}},
+                {"type": "item.completed", "item": {"id": "4", "type": "agent_message", "text": "last"}},
+            )
+        )
+        text = self.renderer().render("codex", raw, "go")
+        self.assertIn("[1] command_execution ls\n    status: exit 2\n", text)
+        self.assertNotIn("[2]", text)
+        self.assertTrue(text.endswith("== final message\nlast\n"))
+
+    def test_replacements_cover_whole_prefixes_in_order(self) -> None:
+        replace = self.renderer().replace
+        text = (
+            "/h/r/fixture/.agents/skills/m2/SKILL.md /h/r/fixture/GOAL.md "
+            "/h/r/fixture-old /private/tmp/claude-1000/-h-slug/tasks/1 /h/other box.local"
+        )
+        self.assertEqual(
+            replace(text, "/h/r/fixture/.agents/skills/m2", "/h/r/fixture", "/h", "box.local"),
+            "/plugin/SKILL.md /work/GOAL.md ~/r/fixture-old /scratch/tasks/1 ~/other host",
+        )
+
+
 class DemoTest(unittest.TestCase):
     def test_images_agree_with_the_transcript(self) -> None:
         verifier = load(ROOT / "scripts" / "verify_demo.py", "verify_demo")

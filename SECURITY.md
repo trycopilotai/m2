@@ -42,6 +42,9 @@ private channel.
   there through `sh`, and rewrites the transcript and the
   manifest. With `RECORD_RAW_DIR` set it also writes the
   unedited capture into that directory.
+  `scripts/render_invocation.py` reads a client's raw JSON
+  lines and a prompt file, and writes a transcript to
+  standard output.
   `tests/test_package.py` reads the files under
   `skills/m2/`. `tests/test_integrations.py` runs `git`
   against the repository root, runs `tests/test_package.py`

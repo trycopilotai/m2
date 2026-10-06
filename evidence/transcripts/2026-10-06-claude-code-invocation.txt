@@ -1,0 +1,66 @@
+client: claude-code
+
+== prompt
+Use /m2 for this task. This repository holds GOAL.md, a made-up goal with several workstreams. Using the m2 reference documents, explain which m2 artifacts a manager would produce for this goal, and for each one say where the protocol defines it, citing the reference file and section. Do not start an m2 run, and do not create, change, commit or push anything. Stay inside this directory; outside it, read only the m2 skill's own files.
+
+== tool calls
+[1] Skill {"skill": "m2:m2"}
+    status: ok
+[2] Read {"file_path": "/work/GOAL.md"}
+    status: ok
+[3] Read {"file_path": "/plugin/skills/m2/references/m2.protocol.md"}
+    status: ok
+[4] Read {"file_path": "/plugin/skills/m2/references/m2-artifact-schemas.md"}
+    status: ok
+[5] Grep {"-n": true, "output_mode": "content", "path": "/plugin/skills/m2/references/m2.protocol.md", "pattern": "^[A-Z][^\\n]*:$|^## |^Phase|^Execution [Pp]hase"}
+    status: ok
+[6] Grep {"-n": true, "output_mode": "content", "path": "/plugin/skills/m2/references/m1.protocol.md", "pattern": "^[A-Z][^\\n]*:$|^## "}
+    status: ok
+[7] Grep {"-n": true, "output_mode": "content", "path": "/plugin/skills/m2/references/writeAC.protocol.md", "pattern": "^[A-Z][^\\n]*:$|^## "}
+    status: ok
+[8] Read {"file_path": "/plugin/skills/m2/references/m2.protocol.md", "limit": 600, "offset": 1437}
+    status: ok
+[9] Read {"file_path": "/plugin/skills/m2/references/m2.protocol.md", "limit": 700, "offset": 2037}
+    status: ok
+[10] Read {"file_path": "/plugin/skills/m2/references/m2.protocol.md", "limit": 400, "offset": 2737}
+    status: ok
+[11] Read {"file_path": "/plugin/skills/m2/references/m1.protocol.md"}
+    status: ok
+[12] Read {"file_path": "/plugin/skills/m2/references/writeAC.protocol.md"}
+    status: ok
+[13] Read {"file_path": "/plugin/skills/m2/references/m2.protocol.md", "limit": 323, "offset": 3136}
+    status: ok
+
+== final message
+## Short answer
+
+GOAL.md as it stands is **not an m2-conformant plan** — it has no YAML front matter and none of the required body sections (`m2.protocol.md` § "Plan-file minimum schema", lines 1457–1487). So nothing below would actually get produced until someone wraps this goal in a real `*.plan.m2.gpt.md` file in the plan store. What follows is what the protocol *says* would be produced once that happens, mapped onto this goal's three workstreams.
+
+Also worth flagging up front: "manager" is overloaded in these docs. `m2` = manager-of-managers (the conductor); `m1` = manager-of-ICs, "the role of one lane inside an m2 run" (`m1.protocol.md`, lines 3–11). The artifacts below are the ones an **m1 lane manager** produces — the conductor (`m2`) produces a separate, larger set of run-level artifacts that the m1 outputs feed into.
+
+## Lane shape for this goal
+
+The three workstreams (backend endpoint, frontend button, docs) are a textbook case of disjoint domains, so `m2` would most naturally open one M1 lane per workstream — subject to `numM1s`, which defaults to `1` (`m2.protocol.md` § "Requested M1 Lane Count Rule", lines 2010–2016). With the default, a single manager could own all three packets serially instead of three parallel lanes; nothing in the docs forces 3 lanes for a goal this small.
+
+## Artifacts an m1 manager produces, with citations
+
+| Artifact | What it holds for this goal | Defined in |
+|---|---|---|
+| **Manager output record** (plan) | Owned packets, write scope (e.g. backend's route handler path, frontend's notes-list component, docs' user-guide file), denied paths, dependencies, contract decisions, implementation plan, packet table, worker/tester prompts, open questions, handoff | `m2.protocol.md` § "Manager output schema", lines 3130–3168 |
+| **Canonical Packet Registry Row** (one per packet — endpoint, button, docs copy) | `packet_id`, `owner_manager`, `allowed_write_paths`, `required_tests`, `browser_evidence`, `acceptance_evidence`, `stop_conditions`, `integration_owner`, etc. | `m2.protocol.md` § "Canonical packet registry row", lines 3170–3204; required fields in `m2-artifact-schemas.md` § "Packet Row Record", lines 111–143 |
+| **Interface Contract Record** | The CSV response shape/columns is a shared interface the frontend and docs packets depend on, so it must be locked before those packets leave `tl_review` | `m2.protocol.md` § "Interface Lock Gate", lines 1894–1907; fields in `m2-artifact-schemas.md` § "Interface Contract Record", lines 157–181 |
+| **File Lease Record** | Even with disjoint backend/frontend/docs trees, Phase 2 explicitly rejects the board if any packet lacks a declared lease | `m2.protocol.md` § "Worktree And Integration Contract", lines 959–1001, and § "Phase 2 `Open the MoM control board`", lines 2746–2782; fields in `m2-artifact-schemas.md` § "File Lease Record", lines 144–156 |
+| **Worker/tester prompts & dispatch** | One SWE per packet (endpoint code, button code, docs copy) plus a tester | `m2.protocol.md` § "Manager output schema", lines 3156–3159, and § "Phase 5 `Implementation dispatch`", lines 2837–2923 |
+| **Supervision rows** | Per-worker deliverable/status/next-check tracking inside the lane | `m1.protocol.md` § "Phase 4 `Supervision`", lines 179–187 |
+| **Evidence rows** | Backend: command-output test hitting `/notes/export.csv`; frontend: browser/screenshot proof of the download; docs: diff/review-proof (no browser evidence needed — it's a non-UI journey) | `m2-artifact-schemas.md` § "Evidence Row Record", lines 1291–1322; contract in `m2.protocol.md` § "Evidence Freshness", lines 2367–2380 |
+| **Review Record** (requested by the manager, written by the TL reviewer) | Pass/revise/block verdict before each packet integrates | `m2.protocol.md` § "Phase 4 `TL and Uber TL review`", lines 2812–2836, and § "Review Lifecycle", lines 2352–2366 |
+| **Non-Stopping Delivery Event** | PR(s) carrying the reviewed slice(s) — likely consolidated to 1–3 PRs across all three workstreams rather than one per workstream | `m2.protocol.md` § "Phase 8 `Delivery`", lines 3048–3127, and § "PR Portfolio Pressure Contract", lines 570–609 |
+| **Exit record** | Each manager planning pass must end in a dispatch-ready packet, an integration decision, or a named blocker | `m1.protocol.md` § "Phase 5 `Exit`", lines 188–197 |
+
+## A disagreement worth naming
+
+`m2-artifact-schemas.md` defines **"Non-Stopping Delivery Event Record" twice** with different field lists — once at lines 710–768, once at lines 1373–1446. The file doesn't reconcile them; per the skill's own note ("the documents... do not fully agree with each other"), I'm flagging that rather than silently picking one for the PR-delivery artifact above.
+
+## What the manager's output feeds into (owned by the conductor, not the manager)
+
+The acceptance matrix rows each packet must cite are produced by `m2` applying `writeAC.protocol.md` *before* any manager plans (`m2.protocol.md` § "Acceptance-First Planning Contract", lines 1559–1627; `writeAC.protocol.md` § "M2 acceptance module contract", lines 110–143) — that's conductor work, not manager work, so I've left it out of the table above.

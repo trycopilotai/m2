@@ -1,0 +1,132 @@
+client: codex
+
+== prompt
+Use $m2 for this task. This repository holds GOAL.md, a made-up goal with several workstreams. Using the m2 reference documents, explain which m2 artifacts a manager would produce for this goal, and for each one say where the protocol defines it, citing the reference file and section. Do not start an m2 run, and do not create, change, commit or push anything. Stay inside this directory; outside it, read only the m2 skill's own files.
+
+== tool calls
+[1] command_execution /bin/zsh -lc "pwd && wc -l GOAL.md .agents/skills/m2/SKILL.md .agents/skills/m2/references/*.md && sed -n '1,240p' GOAL.md && sed -n '1,240p' .agents/skills/m2/SKILL.md"
+    status: exit 0
+[2] command_execution /bin/zsh -lc "sed -n '1,900p' .agents/skills/m2/references/m2.protocol.md"
+    status: exit 0
+[3] command_execution /bin/zsh -lc "sed -n '901,1800p' .agents/skills/m2/references/m2.protocol.md"
+    status: exit 0
+[4] command_execution /bin/zsh -lc "sed -n '1,450p' .agents/skills/m2/references/m2.protocol.md"
+    status: exit 0
+[5] command_execution /bin/zsh -lc "sed -n '451,900p' .agents/skills/m2/references/m2.protocol.md"
+    status: exit 0
+[6] command_execution /bin/zsh -lc "sed -n '901,1350p' .agents/skills/m2/references/m2.protocol.md"
+    status: exit 0
+[7] command_execution /bin/zsh -lc "sed -n '1351,1800p' .agents/skills/m2/references/m2.protocol.md"
+    status: exit 0
+[8] command_execution /bin/zsh -lc "sed -n '1801,2250p' .agents/skills/m2/references/m2.protocol.md"
+    status: exit 0
+[9] command_execution /bin/zsh -lc "sed -n '2251,2700p' .agents/skills/m2/references/m2.protocol.md"
+    status: exit 0
+[10] command_execution /bin/zsh -lc "sed -n '2701,3150p' .agents/skills/m2/references/m2.protocol.md"
+    status: exit 0
+[11] command_execution /bin/zsh -lc "sed -n '3151,3457p' .agents/skills/m2/references/m2.protocol.md"
+    status: exit 0
+[12] command_execution /bin/zsh -lc "sed -n '1,260p' .agents/skills/m2/references/m1.protocol.md && sed -n '1,220p' .agents/skills/m2/references/writeAC.protocol.md"
+    status: exit 0
+[13] command_execution /bin/zsh -lc "sed -n '1,500p' .agents/skills/m2/references/m2-artifact-schemas.md"
+    status: exit 0
+[14] command_execution /bin/zsh -lc "sed -n '501,1000p' .agents/skills/m2/references/m2-artifact-schemas.md"
+    status: exit 0
+[15] command_execution /bin/zsh -lc "sed -n '1001,1446p' .agents/skills/m2/references/m2-artifact-schemas.md"
+    status: exit 0
+[16] command_execution /bin/zsh -lc "rg -n '"'^#{1,3} '"' .agents/skills/m2/references/m2.protocol.md .agents/skills/m2/references/m2-artifact-schemas.md .agents/skills/m2/references/m1.protocol.md .agents/skills/m2/references/writeAC.protocol.md"
+    status: exit 0
+[17] command_execution /bin/zsh -lc "rg -n '"'^(Runnable Resume Prompt Contract|Plan-file minimum schema|Plan-file validation|Acceptance-First Planning Contract|Durable conductor contract|Transactional Run State Contract|Interface Lock Gate|Behavior Gate Contract|Gate Portfolio Contract|Gate Execution Process Contract|Bud ...[+882 chars]
+    status: exit 0
+[18] command_execution /bin/zsh -lc "rg -n '"'^(Execution Mode And Isolation Contract|Delegated Management Contract|Active Agent Supervision Cadence Contract|Product Execution Spine|Post-Delivery Continuation Contract|Real Work Tick Contract|Security And Privacy Gate|Review Lifecycle|Evidence Freshness|Gate Portfolio Cont ...[+241 chars]
+    status: exit 0
+[19] command_execution /bin/zsh -lc "rg -n 'RUN_HEALTH_DASHBOARD_PATH=' .agents/skills/m2/references/m2.protocol.md && rg -n 'Manager output schema|adjacent structured record' .agents/skills/m2/references/m2.protocol.md && rg -n '"'^## Non-Stopping Delivery Event Record'"' .agents/skills/m2/references/m2-artifact-schemas. ...[+3 chars]
+    status: exit 0
+[20] todo_list {"items": [{"completed": true, "text": "Read GOAL.md and all m2 reference documents in full"}, {"completed": true, "text": "Map the goal's workstreams to the artifacts a manager would produce"}, {"completed": true, "text": "Cross-check definitions, sections, and protocol disagreements"}, {"completed ...[+69 chars]
+    status: unknown
+
+== final message
+No m2 run was started, and the repository remains unchanged.
+
+## How this goal maps to m2
+
+[GOAL.md](/work/GOAL.md:1) is useful source material, but it is not itself a runnable m2 plan. A runnable plan needs the prescribed filename, front matter, and body sections defined by [m2.protocol.md, “Plan-file minimum schema”](/plugin/references/m2.protocol.md:1457) and [m2-artifact-schemas.md, “Plan Front Matter Record”](/plugin/references/m2-artifact-schemas.md:27).
+
+The goal exposes three packet domains:
+
+- Backend export endpoint.
+- Frontend download interaction.
+- User-guide documentation.
+
+These could become three M1 lanes if `numM1s:3` were explicitly requested and their scopes were safe. Otherwise m2 defaults to one M1 and could move the same packets serially. The lane rules are in [m2.protocol.md, “Delegated Management Contract”](/plugin/references/m2.protocol.md:444) and [m1.protocol.md, “Relationship to m2()”](/plugin/references/m1.protocol.md:213).
+
+## Core planning and manager artifacts
+
+1. **Acceptance matrix**
+
+   The conductor would normalize the goal into atomic, source-traceable acceptance rows before dispatch. Likely rows would cover:
+
+   - The signed-in user can request `GET /notes/export.csv`.
+   - The export contains every note that user owns and no notes owned by others.
+   - The response is streamed as CSV.
+   - The notes-list button downloads that export.
+   - The user guide states the export format and columns.
+   - All three workstreams are on `main` with passing checks.
+
+   Each row needs source inputs, target behavior, journey, gates, packet IDs, evidence, status, and blocking questions. This is defined by [m2.protocol.md, “Acceptance-First Planning Contract”](/plugin/references/m2.protocol.md:1559), [writeAC.protocol.md, “M2 acceptance module contract”](/plugin/references/writeAC.protocol.md:110), and [m2-artifact-schemas.md, “Acceptance Matrix Row Record”](/plugin/references/m2-artifact-schemas.md:60).
+
+   The exact CSV columns, ordering, escaping, encoding, filename, and unspecified error behavior cannot be invented. Discovery must resolve them from the application, or the matrix must record blocking questions under [writeAC.protocol.md, “Transformation rules”](/plugin/references/writeAC.protocol.md:46).
+
+2. **M1 manager output for each active lane**
+
+   Backend, frontend, and docs ownership would each be represented by a manager summary containing owned packets, write and denied scopes, dependencies, contract decisions, implementation steps, prompts, validation, questions, and handoff. Defined in [m2.protocol.md, “Manager output schema”](/plugin/references/m2.protocol.md:3130).
+
+   Each manager must finish with a dispatch-ready packet, an integration decision, or a concrete blocker. Worker-supervision rows also record deliverable, status, last/next check, and redirect action. See [m1.protocol.md, “Execution phases,” Phases 2–5](/plugin/references/m1.protocol.md:81).
+
+3. **Canonical packet records**
+
+   At minimum there would be backend, frontend, and docs packet rows, probably followed by integration/verification/delivery packets. Each names its manager, exact paths, denied paths, dependencies, acceptance IDs, tests, evidence, integration owner, rollback, and status artifact.
+
+   Defined in [m2.protocol.md, “Canonical packet registry row”](/plugin/references/m2.protocol.md:3170) and [m2-artifact-schemas.md, “Packet Row Record”](/plugin/references/m2-artifact-schemas.md:111).
+
+4. **File-lease records**
+
+   These separate backend source/tests, frontend source/tests, and guide files, while identifying any shared files and integration order. Defined in [m2-artifact-schemas.md, “File Lease Record”](/plugin/references/m2-artifact-schemas.md:144).
+
+5. **Interface-contract record**
+
+   Because the frontend consumes a new backend route, the manager needs a shared contract covering the route, response fields, compatibility, defaults, errors, tests, consumers, and signoffs before dependent workers dispatch. Defined in [m2.protocol.md, “Interface Lock Gate”](/plugin/references/m2.protocol.md:1894) and [m2-artifact-schemas.md, “Interface Contract Record”](/plugin/references/m2-artifact-schemas.md:157).
+
+6. **Worker/tester prompts and worker-output records**
+
+   Prompts are part of the manager output and must carry bounded scopes, tests, acceptance IDs, and stop conditions. Returned work is recorded with branch, SHAs, diff, changed paths, commands, evidence, reviewer, and residual risk. Defined in [m2.protocol.md, “Worker output schema”](/plugin/references/m2.protocol.md:3206) and [m2-artifact-schemas.md, “Worker Output Record”](/plugin/references/m2-artifact-schemas.md:1241).
+
+## Review, evidence, and delivery artifacts
+
+- **Review records:** TL reviews of manager plans and worker diffs, an Uber-TL combined-design review, and security/privacy review for the route’s auth and user-data handling. Defined in [m2.protocol.md, “Review Lifecycle”](/plugin/references/m2.protocol.md:2352), [“Security And Privacy Gate”](/plugin/references/m2.protocol.md:2381), and [m2-artifact-schemas.md, “Review Record”](/plugin/references/m2-artifact-schemas.md:1261).
+
+- **Evidence rows:** backend/API tests and ownership proof; frontend desktop/mobile download proof and downloaded-file inspection; docs review against the accepted CSV contract; and integrated-main/check results. Defined in [m2.protocol.md, “Evidence Freshness”](/plugin/references/m2.protocol.md:2367) and [m2-artifact-schemas.md, “Evidence Row Record”](/plugin/references/m2-artifact-schemas.md:1291).
+
+- **Gate and tick records:** gate-portfolio rows for backend behavior, frontend download, documentation, reliability, and delivery; each productive tick gets a Tick Eligibility Record. Defined in [m2.protocol.md, “Gate Portfolio Contract”](/plugin/references/m2.protocol.md:1942), [m2-artifact-schemas.md, “Gate Portfolio Record”](/plugin/references/m2-artifact-schemas.md:298), and [“Tick Eligibility Record”](/plugin/references/m2-artifact-schemas.md:610).
+
+- **Delivery artifacts:** non-stopping delivery-event records for commits, pushes, PRs, and checks; PR Stack Readiness Records; a Final Response Gate Record; and finally a Delivery Record proving that all packets landed on `main` with fresh evidence and signoffs. Defined in [m2.protocol.md, “Final Response Gate”](/plugin/references/m2.protocol.md:2256), [m2-artifact-schemas.md, “PR Stack Readiness Record”](/plugin/references/m2-artifact-schemas.md:946), [“Final Response Gate Record”](/plugin/references/m2-artifact-schemas.md:894), and [“Delivery Record”](/plugin/references/m2-artifact-schemas.md:1341).
+
+## Durable conductor artifacts
+
+An actual run would additionally create:
+
+- `RUN_LOG_PATH`
+- canonical `events.gpt.jsonl`
+- `board.gpt.md`
+- `resume-cockpit.gpt.md`
+- a runnable resume prompt and plan-specific pointer while non-terminal
+
+Their paths and required/optional status are defined in [m2.protocol.md, “Derived values”](/plugin/references/m2.protocol.md:1351), while event authority and derived-view behavior are defined in [“Transactional Run State Contract”](/plugin/references/m2.protocol.md:1835). Resume contents are defined in [m2-artifact-schemas.md, “Resume Prompt Record”](/plugin/references/m2-artifact-schemas.md:1059).
+
+An isolation record is required only in `isolated_control` mode, and a budget plan only when `iterations:` or `duration:` is supplied. See [“Isolation Record”](/plugin/references/m2-artifact-schemas.md:1186) and [“Budget Plan Record”](/plugin/references/m2-artifact-schemas.md:352).
+
+## Reference inconsistencies to preserve
+
+- The protocol says the Manager output has an adjacent structured record defined in the schema file, but that file contains no `Manager Record` section. The Markdown manager schema is defined; its promised structured companion is not.
+- `m2-artifact-schemas.md` defines “Non-Stopping Delivery Event Record” twice, with different required fields: [first definition](/plugin/references/m2-artifact-schemas.md:710) and [second definition](/plugin/references/m2-artifact-schemas.md:1373). The references do not state which wins.
+- `RUN_HEALTH_DASHBOARD_PATH` is defined once as an alias of `gate-status.md` and later as `health-dashboard.gpt.md`: [first definition](/plugin/references/m2.protocol.md:1327), [second definition](/plugin/references/m2.protocol.md:1414).

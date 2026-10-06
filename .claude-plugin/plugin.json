@@ -1,6 +1,6 @@
 {
   "name": "m2",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Reference text for m2, a manager-of-managers protocol for coding agents. Four protocol documents and no runnable code.",
   "author": {
     "name": "trycopilot.ai"
