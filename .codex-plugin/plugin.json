@@ -3,7 +3,7 @@
   "version": "0.1.2",
   "description": "Reference text for m2, a manager-of-managers protocol for coding agents. Four protocol documents and no runnable code.",
   "author": {
-    "name": "trycopilot.ai"
+    "name": "trycopilot.ai LLC"
   },
   "homepage": "https://github.com/trycopilotai/m2#readme",
   "repository": "https://github.com/trycopilotai/m2",
@@ -19,7 +19,7 @@
     "displayName": "m2",
     "shortDescription": "Manager-of-managers protocol reference text",
     "longDescription": "Reference text for m2, a manager-of-managers protocol for coding agents. Four protocol documents and no runnable code.",
-    "developerName": "trycopilot.ai",
+    "developerName": "trycopilot.ai LLC",
     "category": "Developer Tools",
     "capabilities": [
       "Read"
