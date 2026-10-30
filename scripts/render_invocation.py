@@ -82,7 +82,10 @@ def claude_code(records: list) -> tuple:
                         status[part["tool_use_id"]] = "error" if failed else "ok"
         elif kind == "result":
             final = record.get("result")
-    rows = [(name, arguments, status.get(ident, "unknown")) for ident, name, arguments in calls]
+    rows = [
+        (name, arguments, status.get(ident, "unknown"))
+        for ident, name, arguments in calls
+    ]
     return rows, final
 
 
@@ -109,12 +112,16 @@ def codex(records: list) -> tuple:
                 )
             )
         else:
-            arguments = {k: v for k, v in item.items() if k not in ("id", "type", "status")}
+            arguments = {
+                k: v for k, v in item.items() if k not in ("id", "type", "status")
+            }
             rows.append((kind, compact(arguments), item.get("status") or "unknown"))
     return rows, final
 
 
-def replace(text: str, plugin_root: str, capture_root: str, home: str, hostname: str) -> str:
+def replace(
+    text: str, plugin_root: str, capture_root: str, home: str, hostname: str
+) -> str:
     def prefix(path: str, value: str, body: str) -> str:
         path = path.rstrip("/")
         return re.sub(re.escape(path) + r"(?![\w.-])", value, body)
@@ -130,7 +137,14 @@ def replace(text: str, plugin_root: str, capture_root: str, home: str, hostname:
 
 def render(client: str, raw: str, prompt: str) -> str:
     rows, final = (claude_code if client == "claude-code" else codex)(events(raw))
-    lines = ["client: " + client, "", "== prompt", prompt.rstrip("\n"), "", "== tool calls"]
+    lines = [
+        "client: " + client,
+        "",
+        "== prompt",
+        prompt.rstrip("\n"),
+        "",
+        "== tool calls",
+    ]
     for number, (name, arguments, status) in enumerate(rows, 1):
         lines.append("[%d] %s %s" % (number, name, truncate(arguments)))
         lines.append("    status: " + status)
@@ -153,7 +167,9 @@ def main(argv: list) -> int:
     with open(options.prompt, encoding="utf-8") as handle:
         prompt = handle.read()
     text = render(options.client, raw, prompt)
-    text = replace(text, options.plugin_root, options.capture_root, options.home, options.hostname)
+    text = replace(
+        text, options.plugin_root, options.capture_root, options.home, options.hostname
+    )
     sys.stdout.write(text)
     return 0
 

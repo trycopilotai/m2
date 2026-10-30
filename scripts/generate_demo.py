@@ -28,9 +28,7 @@ ROOT = Path(__file__).resolve().parents[1]
 TRANSCRIPT = ROOT / "evidence" / "transcripts" / "package-check.txt"
 DEMO = ROOT / "assets" / "demo.svg"
 POSTER = ROOT / "assets" / "poster.svg"
-SOURCE_LABEL = (
-    "Packaging test output, from evidence/transcripts/package-check.txt"
-)
+SOURCE_LABEL = "Packaging test output, from evidence/transcripts/package-check.txt"
 
 WIDTH = 1280
 HEIGHT = 720
@@ -116,9 +114,11 @@ def line_colour(line: str) -> str:
 
 
 def text_element(line: str, baseline: int) -> str:
-    return (
-        '    <text x="%d" y="%d" fill="%s" xml:space="preserve">%s</text>'
-        % (MARGIN_X, baseline, line_colour(line), html.escape(line))
+    return '    <text x="%d" y="%d" fill="%s" xml:space="preserve">%s</text>' % (
+        MARGIN_X,
+        baseline,
+        line_colour(line),
+        html.escape(line),
     )
 
 
