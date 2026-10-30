@@ -226,7 +226,9 @@ class ReadmeTest(unittest.TestCase):
         self.assertEqual(lines[0], "$ " + COMMAND)
         self.assertIn(FILES_LINE, lines)
         self.assertIn(NO_PROGRAM_LINE, lines)
-        self.assertEqual(lines[-3:], ["OK", '$ echo "exit status: $?"', "exit status: 0"])
+        self.assertEqual(
+            lines[-3:], ["OK", '$ echo "exit status: $?"', "exit status: 0"]
+        )
 
     def test_each_install_block_pins_the_manifest_version(self) -> None:
         version = manifest(".claude-plugin")["version"]
@@ -332,7 +334,9 @@ class EvidenceTest(unittest.TestCase):
         self.assertEqual(fresh.returncode, 0, fresh.stdout)
         recorded = result_lines(read(TRANSCRIPT))
         self.assertEqual(result_lines(fresh.stdout), recorded)
-        count = [line for line in read(TRANSCRIPT).splitlines() if line.startswith("Ran ")]
+        count = [
+            line for line in read(TRANSCRIPT).splitlines() if line.startswith("Ran ")
+        ]
         self.assertEqual(count, ["Ran %d tests" % len(recorded)])
 
 
@@ -358,7 +362,14 @@ class InvocationTest(unittest.TestCase):
             self.assertRegex(entry["raw_output_sha256"], r"^[0-9a-f]{64}$")
             self.assertEqual(entry["renderer"], "scripts/render_invocation.py")
             self.assertEqual([t["name"] for t in entry["transforms"]], TRANSFORMS)
-            for field in ("version", "model", "invocation", "fixture", "date", "outcome"):
+            for field in (
+                "version",
+                "model",
+                "invocation",
+                "fixture",
+                "date",
+                "outcome",
+            ):
                 self.assertTrue(entry[field], field)
 
     def test_transcript_hashes_match_the_manifest(self) -> None:
@@ -366,7 +377,9 @@ class InvocationTest(unittest.TestCase):
             path = ROOT / entry["transcript"]["path"]
             self.assertEqual(entry["transcript"]["sha256"], sha256(path))
             client = "claude-code" if entry["product"] == "Claude Code" else "codex"
-            self.assertEqual(path.name, entry["date"] + "-" + client + "-invocation.txt")
+            self.assertEqual(
+                path.name, entry["date"] + "-" + client + "-invocation.txt"
+            )
             self.assertTrue(read(path).startswith("client: " + client + "\n"))
 
     def test_transcript_set_is_what_the_manifest_names(self) -> None:
@@ -417,8 +430,18 @@ class RendererTest(unittest.TestCase):
                     "type": "assistant",
                     "message": {
                         "content": [
-                            {"type": "tool_use", "id": "a", "name": "Read", "input": {"file_path": "/f/x"}},
-                            {"type": "tool_use", "id": "b", "name": "Bash", "input": {"command": "x" * 400}},
+                            {
+                                "type": "tool_use",
+                                "id": "a",
+                                "name": "Read",
+                                "input": {"file_path": "/f/x"},
+                            },
+                            {
+                                "type": "tool_use",
+                                "id": "b",
+                                "name": "Bash",
+                                "input": {"command": "x" * 400},
+                            },
                         ]
                     },
                 },
@@ -427,7 +450,11 @@ class RendererTest(unittest.TestCase):
                     "message": {
                         "content": [
                             {"type": "tool_result", "tool_use_id": "a"},
-                            {"type": "tool_result", "tool_use_id": "b", "is_error": True},
+                            {
+                                "type": "tool_result",
+                                "tool_use_id": "b",
+                                "is_error": True,
+                            },
                         ]
                     },
                 },
@@ -444,10 +471,27 @@ class RendererTest(unittest.TestCase):
         raw = "\n".join(
             json.dumps(record)
             for record in (
-                {"type": "item.completed", "item": {"id": "1", "type": "reasoning", "text": "r"}},
-                {"type": "item.completed", "item": {"id": "2", "type": "command_execution", "command": "ls", "exit_code": 2}},
-                {"type": "item.completed", "item": {"id": "3", "type": "agent_message", "text": "first"}},
-                {"type": "item.completed", "item": {"id": "4", "type": "agent_message", "text": "last"}},
+                {
+                    "type": "item.completed",
+                    "item": {"id": "1", "type": "reasoning", "text": "r"},
+                },
+                {
+                    "type": "item.completed",
+                    "item": {
+                        "id": "2",
+                        "type": "command_execution",
+                        "command": "ls",
+                        "exit_code": 2,
+                    },
+                },
+                {
+                    "type": "item.completed",
+                    "item": {"id": "3", "type": "agent_message", "text": "first"},
+                },
+                {
+                    "type": "item.completed",
+                    "item": {"id": "4", "type": "agent_message", "text": "last"},
+                },
             )
         )
         text = self.renderer().render("codex", raw, "go")
@@ -462,7 +506,13 @@ class RendererTest(unittest.TestCase):
             "/h/r/fixture-old /private/tmp/claude-1000/-h-slug/tasks/1 /h/other box.local"
         )
         self.assertEqual(
-            replace(text, "/h/r/fixture/.agents/skills/m2", "/h/r/fixture", "/h", "box.local"),
+            replace(
+                text,
+                "/h/r/fixture/.agents/skills/m2",
+                "/h/r/fixture",
+                "/h",
+                "box.local",
+            ),
             "/plugin/SKILL.md /work/GOAL.md ~/r/fixture-old /scratch/tasks/1 ~/other host",
         )
 

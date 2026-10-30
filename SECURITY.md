@@ -44,12 +44,11 @@ private channel.
   unedited capture into that directory.
   `scripts/render_invocation.py` reads a client's raw JSON
   lines and a prompt file, and writes a transcript to
-  standard output.
-  `tests/test_package.py` reads the files under
-  `skills/m2/`. `tests/test_integrations.py` runs `git`
-  against the repository root, runs `tests/test_package.py`
-  once, and loads the two demo scripts to compare the images
-  with the transcript.
+  standard output. `tests/test_package.py` reads the files
+  under `skills/m2/`. `tests/test_integrations.py` runs
+  `git` against the repository root, runs
+  `tests/test_package.py` once, and loads the two demo
+  scripts to compare the images with the transcript.
 
 ## What the documents tell an agent to do
 

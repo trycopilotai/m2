@@ -57,8 +57,8 @@ packaging. They are not part of the skill.
 
 ## What is in it
 
-- [`skills/m2/SKILL.md`](skills/m2/SKILL.md) says what m2
-  is and points at the four documents.
+- [`skills/m2/SKILL.md`](skills/m2/SKILL.md) says what m2 is
+  and points at the four documents.
 - [`skills/m2/references/m2.protocol.md`](skills/m2/references/m2.protocol.md)
   is the conductor protocol: the invocation contract, the
   budget and exit contracts, the tick loop, the execution
@@ -168,9 +168,9 @@ does not settle any of it. Known cases:
 - The protocol's Final Response Gate lists six statuses and
   leaves out `green_tick_handoff`, which its bounded green
   tick section and the schemas file use. Its turn-based
-  continuation section allows a final message in three
-  cases and leaves out the overrun handoff and the green
-  tick handoff that other sections allow.
+  continuation section allows a final message in three cases
+  and leaves out the overrun handoff and the green tick
+  handoff that other sections allow.
 - The derived value `RUN_EFFECTIVE_BUDGET_MINUTES` takes the
   larger of the duration and the tick equivalent with no
   exception, while the aggregate M1 passages keep the
@@ -181,8 +181,8 @@ does not settle any of it. Known cases:
   changes.
 - `RUN_HEALTH_DASHBOARD_PATH` is defined twice with
   different values.
-- "Tick Eligibility Checklist" names no section; the
-  schemas file has a Tick Eligibility Record.
+- "Tick Eligibility Checklist" names no section; the schemas
+  file has a Tick Eligibility Record.
 - The compatibility syntax line omits `numM1s`.
 - "Do not use destructive git commands" stands beside a
   recovery path that resets a branch and force-pushes with
@@ -242,10 +242,10 @@ trap - EXIT
 rm -rf "$install_tmp"
 ```
 
-The name to invoke is `/m2`. In the agent run below,
-Claude Code loaded the skill from a plugin directory, where
-it is listed as `m2:m2`; a skill installed by this block was
-not invoked.
+The name to invoke is `/m2`. In the agent run below, Claude
+Code loaded the skill from a plugin directory, where it is
+listed as `m2:m2`; a skill installed by this block was not
+invoked.
 
 ### Codex
 
@@ -299,8 +299,8 @@ Both blocks copy through `skill/`, a symlink to
 `skills/m2/`, so the installed directory holds `SKILL.md`,
 `agents/` and `references/` as real files. They assume a
 checkout that keeps symlinks; with `core.symlinks` off the
-copy fails and the block rolls back. The repository
-also carries `.claude-plugin/plugin.json` and
+copy fails and the block rolls back. The repository also
+carries `.claude-plugin/plugin.json` and
 `.codex-plugin/plugin.json` for a marketplace. No
 marketplace lists this skill, so no marketplace install is
 described here.
@@ -330,14 +330,13 @@ the demo images to each other.
 
 ### Agent invocations
 
-Each client was started once, on one synthetic fixture
-whose only tracked file is a made-up three-workstream
-`GOAL.md` (for Codex, beside a committed copy of the skill
-under `.agents/skills/m2`), and asked
-through the skill which m2 artifacts a manager would produce
-for that goal and where the protocol defines each. This is
-an agent reading and citing the protocol, not an m2 run, and
-not a benchmark.
+Each client was started once, on one synthetic fixture whose
+only tracked file is a made-up three-workstream `GOAL.md`
+(for Codex, beside a committed copy of the skill under
+`.agents/skills/m2`), and asked through the skill which m2
+artifacts a manager would produce for that goal and where
+the protocol defines each. This is an agent reading and
+citing the protocol, not an m2 run, and not a benchmark.
 
 - [`evidence/transcripts/2026-10-06-claude-code-invocation.txt`](evidence/transcripts/2026-10-06-claude-code-invocation.txt):
   Claude Code 2.1.220 loaded `m2:m2` with a `Skill` call,
@@ -350,23 +349,24 @@ not a benchmark.
   without a lease order.
 - [`evidence/transcripts/2026-10-06-codex-invocation.txt`](evidence/transcripts/2026-10-06-codex-invocation.txt):
   Codex 0.146.0 read `SKILL.md` and the four documents and
-  answered with the manager, packet, lease, contract, review,
-  evidence, delivery and conductor artifacts, citing file,
-  section and line. It started no m2 run and changed no
-  file.
+  answered with the manager, packet, lease, contract,
+  review, evidence, delivery and conductor artifacts, citing
+  file, section and line. It started no m2 run and changed
+  no file.
 
 Both runs used the package as tagged v0.1.0; nothing under
 `skills/` changed since. Not every citation was checked
 against the documents. Both transcripts were rendered from
 the clients' raw output by
 [`scripts/render_invocation.py`](scripts/render_invocation.py),
-which makes two kinds of edit and no other: it cuts tool-call
-arguments longer than 300 characters, marking each cut with
-` ...[+N chars]`, and it replaces local paths and the host
-name. `evidence/demo-manifest.json` declares each edit under
-`invocations`, with the client versions, models and hashes.
-The raw output and the fixture are not published, so the
-transcripts cannot be re-rendered from this repository.
+which makes two kinds of edit and no other: it cuts
+tool-call arguments longer than 300 characters, marking each
+cut with ` ...[+N chars]`, and it replaces local paths and
+the host name. `evidence/demo-manifest.json` declares each
+edit under `invocations`, with the client versions, models
+and hashes. The raw output and the fixture are not
+published, so the transcripts cannot be re-rendered from
+this repository.
 
 ## Contributing
 
