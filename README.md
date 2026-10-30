@@ -2,13 +2,19 @@
 
 Reference text: four protocol documents for m2, a
 manager-of-managers way to run coding agents from one plan
-file. The documents depend on companion protocols,
-repository tooling and a plan store that are not included,
-and no m2 run is evidenced here.
+file.
+
+---
 
 [![auto-lint-pr](https://github.com/trycopilotai/m2/actions/workflows/auto-lint-pr.yml/badge.svg)](https://github.com/trycopilotai/m2/actions/workflows/auto-lint-pr.yml)
 [![check](https://github.com/trycopilotai/m2/actions/workflows/check.yml/badge.svg)](https://github.com/trycopilotai/m2/actions/workflows/check.yml)
 [![lint](https://github.com/trycopilotai/m2/actions/workflows/lint.yml/badge.svg)](https://github.com/trycopilotai/m2/actions/workflows/lint.yml)
+
+---
+
+The documents depend on companion protocols, repository
+tooling and a plan store that are not included, and no m2
+run is evidenced here.
 
 m2 ships four protocol documents and no runnable code.
 
